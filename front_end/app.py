@@ -1,16 +1,19 @@
 from PyQt5.QtWidgets import  QWidget, QPushButton, QVBoxLayout
+from jobs.abt_import import AbtImport
 
-class HelloWorldApp(QWidget):
-    def __init__(self):
+class App(QWidget):
+    def __init__(self, job_manager):
         super().__init__()
+        self.job_manager = job_manager
         self.initUI()
+        
 
     def initUI(self):
         # Set up the window
         self.setWindowTitle("Hello World App")
         self.setGeometry(100, 100, 300, 200)
 
-        self.create_button('Press Here', self.print_hello_world)
+        self.create_button('ABT Import', lambda: self.job_manager.run_jobs('abt_import'))
 
         # Set up layout
         layout = QVBoxLayout()
@@ -21,5 +24,6 @@ class HelloWorldApp(QWidget):
         self.button = QPushButton(title, self)
         self.button.clicked.connect(function)
 
-    def print_hello_world(self):
-        print("Hello World")
+    def closeEvent(self, event):
+        self.job_manager.browser.close()
+        super().closeEvent(event)
